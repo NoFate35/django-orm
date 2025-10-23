@@ -1,5 +1,6 @@
 # Create your models here.
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
 
 
 class TimestampedModel(models.Model):
@@ -8,17 +9,21 @@ class TimestampedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     class Meta:
         abstract = True
 
 
-class User(TimestampedModel):
+class User(TimestampedModel, AbstractBaseUser):
     """A blog user."""
 
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
+    nickname = models.CharField(max_length=100, null=True)
 
+    password = models.CharField(max_length=100)
+    USERNAME_FIELD = "email"
 
 class Tag(TimestampedModel):
     """A tag for the group of posts."""
