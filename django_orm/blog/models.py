@@ -1,61 +1,23 @@
-# Create your models here.
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
 
 
-class TimestampedModel(models.Model):
-    """An abstract model with a pair of timestamps."""
+class Island(models.Model):
+    name = models.CharField(max_length=200)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    def can_reach(self, island, *, by_ship):
+        "Return True if one can reach the @island using a @by ship"
+        # BEGIN (write your solution here)
+        print('island', island. name, 'by_ship', by_ship.name, 'self', self.name)
+        island_a = self
+        island_b = island
+        ship = by_ship
+        way = Ship.objects.filter(islands=island_a).filter(islands=island_b)
+        print('way', way)
 
-
-    class Meta:
-        abstract = True
-
-
-class User(TimestampedModel, AbstractBaseUser):
-    """A blog user."""
-
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=100, null=True)
-    last_name = models.CharField(max_length=100, null=True)
-    nickname = models.CharField(max_length=100, null=True)
-
-    password = models.CharField(max_length=100)
-    USERNAME_FIELD = "email"
-
-class Tag(TimestampedModel):
-    """A tag for the group of posts."""
-
-    title = models.CharField(max_length=100)
-
-class Post(TimestampedModel):
-    """A blog post."""
-
-    title = models.CharField(max_length=200)
-    body = models.TextField()
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag)
+        return(bool(way))
+        # END
 
 
-class PostComment(TimestampedModel):
-    """A commentary to the blog post."""
-
-    body = models.TextField()
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    response_to = models.ForeignKey(
-        'PostComment', on_delete=models.SET_NULL, null=True,
-    )
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-class PostLike(TimestampedModel):
-    """A positive reaction to the blog post."""
-
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ['post', 'creator']
-
+class Ship(models.Model):
+    name = models.CharField(max_length=200)
+    islands = models.ManyToManyField(Island, related_name='ships')
