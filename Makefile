@@ -6,6 +6,9 @@ test:
 server:
 	poetry run manage.py runserver
 
+makemigrations:
+	@$(MANAGE) makemigrations 
+
 .PHONY: migrate
 migrate:
 	@$(MANAGE) migrate

@@ -8,20 +8,23 @@ from django_orm.blog import models
 
 @pytest.mark.django_db
 class FooTest(TestCase):
-    def test_island_can_reach(self):
-        sumatra = models.Island.objects.create(name="Sumatra")
-        java = models.Island.objects.create(name="Java")
-        ceylon = models.Island.objects.create(name="Ceylon")
-        
-        fortune = models.Ship.objects.create(name="Fortune")
-        pearl = models.Ship.objects.create(name="Pearl")
+    def test_clip_rates_for(self):
+        new_one = models.Clip.objects.create(title="The lazy cat")
+        assert models.Clip.rates_for(new_one.title) == [(0, 0)]
 
-        sumatra.ships.add(fortune, pearl)
-        java.ships.add(fortune)
-        ceylon.ships.add(pearl)
+        dogs = models.Clip.objects.create(title="Funny dogs")
+        for _ in range(12):
+            dogs.like()
+        for _ in range(4):
+            dogs.dislike()
+        assert models.Clip.rates_for(dogs.title) == [(12, 4)]
 
-        assert sumatra.can_reach(java, by_ship=fortune)
-        assert sumatra.can_reach(ceylon, by_ship=pearl)
-        assert not sumatra.can_reach(java, by_ship=pearl)
-        assert not sumatra.can_reach(ceylon, by_ship=fortune)
-        assert not java.can_reach(ceylon, by_ship=pearl)
+        cats = models.Clip.objects.create(title="Funny cats")
+        for _ in range(10):
+            cats.like()
+        for _ in range(7):
+            cats.dislike()
+        assert models.Clip.rates_for(cats.title) == [(10, 7)]
+
+        titles = [dogs.title, cats.title]
+        assert models.Clip.rates_for(*titles) == [(10, 7), (12, 4)]
