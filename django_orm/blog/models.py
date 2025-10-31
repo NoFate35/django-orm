@@ -1,23 +1,21 @@
 from django.db import models
 
+class TimestampedModel(models.Model):
+    """An abstract model with a pair of timestamps."""
 
-class Island(models.Model):
-    name = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    def can_reach(self, island, *, by_ship):
-        "Return True if one can reach the @island using a @by ship"
-        # BEGIN (write your solution here)
-        print('island', island. name, 'by_ship', by_ship.name, 'self', self.name)
-        island_a = self
-        island_b = island
-        ship = by_ship
-        way = Ship.objects.filter(islands=island_a).filter(islands=island_b)
-        print('way', way)
-
-        return(bool(way))
-        # END
+    class Meta:
+        abstract = True
 
 
-class Ship(models.Model):
-    name = models.CharField(max_length=200)
-    islands = models.ManyToManyField(Island, related_name='ships')
+class Tag(TimestampedModel):
+    name = models.CharField(max_length=30)
+
+
+class Post(TimestampedModel):
+    title = models.CharField(max_length=100)
+    body = models.CharField(max_length=300)
+    tags = models.ManyToManyField(Tag)
+    views = models.DecimalField(max_digits=10, decimal_places=2)
