@@ -41,13 +41,9 @@ class Clip(models.Model):
         for the clip(s) filtered by provided args.
         """
         # BEGIN (write your solution here)
-        clips = Clip.objects.filter(title__in=args).annotate(likes=Count('cliplike')).annotate(dislikes=Count('clipdislike'))
-        print('ratessss', clips[0].likes, clips[0].dislikes)
-        rates_list = []
-        for clip in clips:
-            rates_list.append((clip.likes, clip.dislikes))
-
-        return rates_list
+        clips = cls.objects.filter(title__in=args).annotate(likes=Count('cliplike', distinct=True),
+                                                            dislikes=Count('clipdislike', distinct=True)).order_by("title")
+        return list(clips.values_list('likes', 'dislikes'))
         # END
 
 
