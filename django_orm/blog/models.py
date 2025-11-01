@@ -1,5 +1,5 @@
-#from django.db import models
-'''
+from django.db import models
+
 
 class TimestampedModel(models.Model):
     """An abstract model with a pair of timestamps."""
@@ -20,7 +20,7 @@ class Post(TimestampedModel):
     body = models.CharField(max_length=300)
     tags = models.ManyToManyField(Tag)
     views = models.DecimalField(max_digits=10, decimal_places=2)
-    '''
+'''
 from django.db import models, transaction
 
 
@@ -29,11 +29,12 @@ class Project(models.Model):
 
     @classmethod
     def reorganize(cls, assignments):
-        '''
+
         for worker_id, project_id in assignments.items():
             Worker.objects.filter(id=worker_id,).update(project=project_id,)
         Worker.objects.exclude(id__in=assignments,).update(project=None,)
-        '''
+        
+    
         from django.db import IntegrityError
         with transaction.atomic():
             for worker_id, project_id in assignments.items():
@@ -54,3 +55,4 @@ class Worker(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+'''

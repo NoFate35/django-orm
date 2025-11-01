@@ -7,3 +7,5 @@ https://docs.djangoproject.com/en/5.2/topics/db/transactions/#django.db.transact
 
 https://docs.djangoproject.com/en/5.2/ref/models/querysets/#:~:text=select_for_update%28%29
 
+https://docs.djangoproject.com/en/5.2/ref/models/indexes/
+
