@@ -29,21 +29,23 @@ class Project(models.Model):
 
     @classmethod
     def reorganize(cls, assignments):
-        # BEGIN (write your solution here)
-        from django.core.exceptions import ObjectDoesNotExist
+        '''
+        for worker_id, project_id in assignments.items():
+            Worker.objects.filter(id=worker_id,).update(project=project_id,)
+        Worker.objects.exclude(id__in=assignments,).update(project=None,)
+        '''
+        from django.db import IntegrityError
         with transaction.atomic():
-            for candidat, project_val in assignments.items():
+            for worker_id, project_id in assignments.items():
                 try:
-                    worker = Worker.objects.get(id=candidat)
-                    reorganize_project = Project.objects.get(id=project_val)
-                except: ObjectDoesNotExist("несуществующий проект!")
-                print('worker:', worker, 'project:', reorganize_project)
+                    worker = Worker.objects.get(id=worker_id)
+                    reorganize_project = Project.objects.get(id=project_id)
+                except: 
+                    raise IntegrityError("несуществующий проект!")
                 worker.project = reorganize_project
                 worker.save()
-            print('assigment keys', assignments.keys())
-            not_workers = Worker.objects.exclude(id__in=assignments.keys())
-        # END
-        return None
+            Worker.objects.exclude(id__in=assignments.keys()).update(project=None)
+
 
 class Worker(models.Model):
     name = models.CharField(max_length=200)
