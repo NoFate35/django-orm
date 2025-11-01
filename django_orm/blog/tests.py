@@ -6,25 +6,68 @@ from django_orm.blog import models
 
 #from .models import User, Tag, Post, PostComment, PostLike
 
-@pytest.mark.django_db
+
 class FooTest(TestCase):
-    def test_clip_rates_for(self):
-        new_one = models.Clip.objects.create(title="The lazy cat")
-        assert models.Clip.rates_for(new_one.title) == [(0, 0)]
+    def work_on(self, *args, project_id):
+        return all(
+        models.Worker.objects.get(id=worker_id).project_id == project_id
+        for worker_id in args
+        )
 
-        dogs = models.Clip.objects.create(title="Funny dogs")
-        for _ in range(12):
-            dogs.like()
-        for _ in range(4):
-            dogs.dislike()
-        assert models.Clip.rates_for(dogs.title) == [(12, 4)]
 
-        cats = models.Clip.objects.create(title="Funny cats")
-        for _ in range(10):
-            cats.like()
-        for _ in range(7):
-            cats.dislike()
-        assert models.Clip.rates_for(cats.title) == [(10, 7)]
+    @pytest.mark.django_db
+    def test_project_reorganize():
+        alice, bob, john, tom = [
+            models.Worker.objects.create(name=name).id
+            for name in ("Alice", "Bob", "John", "Tom")
+                     ]
 
-        titles = [dogs.title, cats.title]
-        assert models.Clip.rates_for(*titles) == [(10, 7), (12, 4)]
+        site, wiki, crm = [
+            models.Project.objects.create(name=name).id for name in ("Site", "Wiki", "Crm")
+                            ]
+
+        models.Project.reorganize(
+        {
+            alice: site,
+            bob: site,
+            john: wiki,
+            tom: crm,
+            }
+            )
+
+        assert work_on(alice, bob, project_id=site)
+        assert work_on(john, project_id=wiki)
+        assert work_on(tom, project_id=crm)
+
+        models.Project.reorganize(
+            {
+            alice: crm,
+            bob: crm,
+            john: crm,
+            }
+        )
+
+        assert work_on(alice, bob, john, project_id=crm)
+        assert work_on(tom, project_id=None)
+
+
+    @pytest.mark.django_db(transaction=True)
+    def test_project_reorganize_on_bad_data():
+        time_machine = models.Project.objects.create(name="Time Machine").id
+        marty = models.Worker.objects.create(name="Marty").id
+        emmet = models.Worker.objects.create(
+            name="Emmet",
+            project_id=time_machine,
+        ).id
+
+        with pytest.raises(django.db.IntegrityError):
+            models.Project.reorganize(
+                {
+                    marty: time_machine,
+                    emmet: 42,  # несуществующий проект!
+                }
+            )
+
+        # исходные назначения не должны были измениться
+        assert work_on(emmet, project_id=time_machine)
+        assert work_on(marty, project_id=None)
