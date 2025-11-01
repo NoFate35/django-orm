@@ -30,7 +30,18 @@ class Project(models.Model):
     @classmethod
     def reorganize(cls, assignments):
         # BEGIN (write your solution here)
-        
+        from django.core.exceptions import ObjectDoesNotExist
+        with transaction.atomic():
+            for candidat, project_val in assignments.items():
+                try:
+                    worker = Worker.objects.get(id=candidat)
+                    reorganize_project = Project.objects.get(id=project_val)
+                except: ObjectDoesNotExist("несуществующий проект!")
+                print('worker:', worker, 'project:', reorganize_project)
+                worker.project = reorganize_project
+                worker.save()
+            print('assigment keys', assignments.keys())
+            not_workers = Worker.objects.exclude(id__in=assignments.keys())
         # END
         return None
 

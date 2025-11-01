@@ -16,7 +16,7 @@ class FooTest(TestCase):
 
 
     @pytest.mark.django_db
-    def test_project_reorganize():
+    def test_project_reorganize(self):
         alice, bob, john, tom = [
             models.Worker.objects.create(name=name).id
             for name in ("Alice", "Bob", "John", "Tom")
@@ -35,9 +35,9 @@ class FooTest(TestCase):
             }
             )
 
-        assert work_on(alice, bob, project_id=site)
-        assert work_on(john, project_id=wiki)
-        assert work_on(tom, project_id=crm)
+        assert self.work_on(alice, bob, project_id=site)
+        assert self.work_on(john, project_id=wiki)
+        assert self.work_on(tom, project_id=crm)
 
         models.Project.reorganize(
             {
@@ -47,12 +47,12 @@ class FooTest(TestCase):
             }
         )
 
-        assert work_on(alice, bob, john, project_id=crm)
-        assert work_on(tom, project_id=None)
+        assert self.work_on(alice, bob, john, project_id=crm)
+        assert self.work_on(tom, project_id=None)
 
 
     @pytest.mark.django_db(transaction=True)
-    def test_project_reorganize_on_bad_data():
+    def test_project_reorganize_on_bad_data(self):
         time_machine = models.Project.objects.create(name="Time Machine").id
         marty = models.Worker.objects.create(name="Marty").id
         emmet = models.Worker.objects.create(
@@ -69,5 +69,5 @@ class FooTest(TestCase):
             )
 
         # исходные назначения не должны были измениться
-        assert work_on(emmet, project_id=time_machine)
-        assert work_on(marty, project_id=None)
+        assert self.work_on(emmet, project_id=time_machine)
+        assert self.work_on(marty, project_id=None)
