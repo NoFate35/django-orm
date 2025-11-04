@@ -2,7 +2,7 @@ from django.test import TestCase
 
 import pytest
 
-from django_orm.blog.models import Author, Book, Borrow, Genre, Review, User
+from django_orm.libruary.models import Author, Book, Borrow, Genre, Review, User
 
 
 @pytest.fixture

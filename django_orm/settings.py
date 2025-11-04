@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'django_orm',
-    'django_orm.blog'
+    'django_orm.libruary'
 ]
 
 MIDDLEWARE = [
