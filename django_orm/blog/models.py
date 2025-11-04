@@ -1,58 +1,53 @@
-from django.db import models
-
-
-class TimestampedModel(models.Model):
-    """An abstract model with a pair of timestamps."""
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
-
-class Tag(TimestampedModel):
-    name = models.CharField(max_length=30)
-
-
-class Post(TimestampedModel):
-    title = models.CharField(max_length=100)
-    body = models.CharField(max_length=300)
-    tags = models.ManyToManyField(Tag)
-    views = models.DecimalField(max_digits=10, decimal_places=2)
-'''
 from django.db import models, transaction
+from django.db.models import Avg, Count
 
 
-class Project(models.Model):
-    name = models.CharField(max_length=200)
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    country = models.CharField(max_length=50)
 
-    @classmethod
-    def reorganize(cls, assignments):
-
-        for worker_id, project_id in assignments.items():
-            Worker.objects.filter(id=worker_id,).update(project=project_id,)
-        Worker.objects.exclude(id__in=assignments,).update(project=None,)
-        
+    # BEGIN (write your solution here)
     
-        from django.db import IntegrityError
-        with transaction.atomic():
-            for worker_id, project_id in assignments.items():
-                try:
-                    worker = Worker.objects.get(id=worker_id)
-                    reorganize_project = Project.objects.get(id=project_id)
-                except: 
-                    raise IntegrityError("несуществующий проект!")
-                worker.project = reorganize_project
-                worker.save()
-            Worker.objects.exclude(id__in=assignments.keys()).update(project=None)
+# END
 
 
-class Worker(models.Model):
-    name = models.CharField(max_length=200)
-    project = models.ForeignKey(
-        Project,
-        null=True,
-        on_delete=models.SET_NULL,
+class Genre(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    # BEGIN (write your solution here)
+    
+# END
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
+    genres = models.ManyToManyField(Genre, related_name="books")
+    copies_available = models.PositiveIntegerField(default=1)
+    # BEGIN (write your solution here)
+
+    
+# END
+
+
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    borrowed_books = models.ManyToManyField(
+        Book, through="Borrow", related_name="borrowers"
     )
-'''
+
+
+class Borrow(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="borrows")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="borrows")
+    borrow_date = models.DateField(auto_now_add=True)
+    return_date = models.DateField(null=True, blank=True)
+
+
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="reviews")
+    rating = models.PositiveSmallIntegerField(choices=[(i, i) for i in range(1, 6)])
+    # BEGIN (write your solution here)
+
+    
+# END

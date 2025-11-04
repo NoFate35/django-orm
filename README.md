@@ -1,11 +1,52 @@
-https://docs.djangoproject.com/en/5.2/ref/models/querysets/#aggregation-functions
+В этом испытании мы реализуем систему библиотеки с функциями выдачи книг и подсчета статистики.
 
+django_project/app/models.py
+Вам уже доступны следующие модели:
 
-https://docs.djangoproject.com/en/5.2/topics/db/aggregation/
+Author - модель Автора книги
 
-https://docs.djangoproject.com/en/5.2/topics/db/transactions/#django.db.transaction.atomic
+name - имя
+country - страна
+Genre - модель Жанра книги
 
-https://docs.djangoproject.com/en/5.2/ref/models/querysets/#:~:text=select_for_update%28%29
+name - имя
+Book - модель Книги
 
-https://docs.djangoproject.com/en/5.2/ref/models/indexes/
+title - название
+author - авторы ForeignKey(Author)
+genres - жанры ManyToManyField(Genre)
+copies_available - количество доступных книг в библиотеке
+User - модель Пользователя библиотеки
+
+name - имя
+borrowed_books - книги взятые пользователем ManyToManyField(Book)
+Borrow - модель Пользования книгой
+
+book - книга ForeignKey(Book)
+user - пользователь ForeignKey(User)
+borrow_date - дата начала пользования
+return_date - дата возврата
+Review - модель Отзыва о книге
+
+book - книга ForeignKey(Book)
+rating - рейтинг
+Вам нужно будет расширить модели и добавить следующие методы:
+
+Book
+
+get_available_books() - метод возвращает доступные книги
+borrow(user) - метод закрепляет книгу за пользователем user и уменьшает количество доступных книг на 1. Если книги нет в наличии, метод генерирует ValueError. Чтобы избежать условий гонки за ресурсы, метод должен работать в транзакции.
+get_popular_books() - метод возвращает все книги в порядке частоты их одалживаний, от самых популярных до самых непопулярных.
+Genre
+
+get_top_genres() - метод возвращает топ-3 жанра по частоте одалживаний из библиотеки.
+Author
+
+get_author_borrow_stats() - метод возвращает количество total_borrows всех одалживаний книг автора из библиотеки.
+Review
+
+get_top_rated_books(min_reviews=3, limit=10) - метод выводит топ-limit книг согласно их среднему рейтингу avg_rating. У книги должно быть минимум min_reviews отзывов.
+Подсказки
+Изучите тесты для примеров работы приложения
+Используйте аннотацию
 
