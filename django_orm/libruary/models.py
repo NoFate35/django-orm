@@ -25,8 +25,10 @@ class Book(models.Model):
     genres = models.ManyToManyField(Genre, related_name="books")
     copies_available = models.PositiveIntegerField(default=1)
     # BEGIN (write your solution here)
-
-    
+    @classmethod
+    def get_available_books(self):
+    	avi = Book.objects.filter(copies_available__gt=0)
+    	return avi
 # END
 
 
