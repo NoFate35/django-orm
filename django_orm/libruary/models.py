@@ -28,14 +28,16 @@ class Book(models.Model):
     # BEGIN (write your solution here)
     @classmethod
     def get_available_books(self):
-    	return Book.objects.filter(copies_available__gt=0)
+        return Book.objects.filter(copies_available__gt=0)
 
 
     def borrow(cls, user):
-    	from django.db import transaction
-    	with transaction.atomic():
-            Book.objects.filter(id=cls.id).update()
-    		print("self", cls, "user", user, "self.copies_available", cls.copies_available)
+        with transaction.atomic():
+            try:
+                Book.objects.filter(id=cls.id).update(copies_available=(cls.copies_available - 1))
+            except:
+                raise ValueError("No copies available")
+            Borrow.objects.create(book=cls, user=user)
     
 # END
 

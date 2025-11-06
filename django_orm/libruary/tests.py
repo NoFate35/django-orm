@@ -65,7 +65,7 @@ class StudentsTest(TestCase):
 
 
     @pytest.mark.django_db
-    def test_borrow_book_no_copies(self, book, user):
+    def test_borrow_book_no_copies(self):
         self.book.copies_available = 0
         self.book.save()
 
