@@ -26,8 +26,7 @@ class Book(models.Model):
     copies_available = models.PositiveIntegerField(default=1)
 
     # BEGIN (write your solution here)
-    @classmethod
-    def get_available_books(self):
+    def get_available_books():
         return Book.objects.filter(copies_available__gt=0)
 
 
@@ -38,8 +37,11 @@ class Book(models.Model):
             except:
                 raise ValueError("No copies available")
             Borrow.objects.create(book=cls, user=user)
-    
-# END
+
+
+    def get_popular_books():
+        return Book.objects.prefetch_related('borrows').annotate(borrow_count = Count('borrows')).order_by('-borrow_count')
+    # END 
 
 
 class User(models.Model):

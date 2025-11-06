@@ -53,7 +53,6 @@ class StudentsTest(TestCase):
     @pytest.mark.django_db
     def test_borrow_book(self):
         initial_copies = self.book.copies_available
-        print("initial_copies", initial_copies)
         self.book.borrow(self.user)
 
         # Проверяем уменьшение количества копий
