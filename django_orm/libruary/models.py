@@ -34,7 +34,8 @@ class Book(models.Model):
     def borrow(cls, user):
     	from django.db import transaction
     	with transaction.atomic():
-    		print("self", cls, "user", user, "self.copies_available")
+            Book.objects.filter(id=cls.id).update()
+    		print("self", cls, "user", user, "self.copies_available", cls.copies_available)
     
 # END
 
