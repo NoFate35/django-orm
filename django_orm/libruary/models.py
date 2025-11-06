@@ -13,9 +13,10 @@ class Author(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True)
-
     # BEGIN (write your solution here)
-    
+    def get_top_genres():
+        genres = Genre.objects.prefetch_related('books').prefetch_related('borrows')
+        print('gggenres', genres)
 # END
 
 
