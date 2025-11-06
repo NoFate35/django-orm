@@ -24,16 +24,17 @@ class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
     genres = models.ManyToManyField(Genre, related_name="books")
     copies_available = models.PositiveIntegerField(default=1)
+
     # BEGIN (write your solution here)
     @classmethod
     def get_available_books(self):
     	return Book.objects.filter(copies_available__gt=0)
 
-    @classmethod
-    def borrow(self, user):
+
+    def borrow(cls, user):
     	from django.db import transaction
     	with transaction.atomic():
-    		print("self", self, "user", user, "self.copies_available", self.title)
+    		print("self", cls, "user", user, "self.copies_available")
     
 # END
 
