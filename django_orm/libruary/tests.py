@@ -81,7 +81,7 @@ class StudentsTest(TestCase):
         )
 
         # Берем первую книгу дважды
-        self.book.borrow(user)
+        self.book.borrow(self.user)
         self.book.borrow(User.objects.create(name="Петр Иванов"))
 
         # Берем вторую книгу один раз
@@ -124,8 +124,8 @@ class StudentsTest(TestCase):
 
         # Создаем заимствования
         self.book.borrow(self.user)
-        book.borrow(User.objects.create(name="Петр Иванов"))
-        second_book.borrow(user)
+        self.book.borrow(User.objects.create(name="Петр Иванов"))
+        second_book.borrow(self.user)
 
         top_genres = Genre.get_top_genres()
         assert top_genres[0] == self.genre

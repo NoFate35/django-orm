@@ -27,8 +27,14 @@ class Book(models.Model):
     # BEGIN (write your solution here)
     @classmethod
     def get_available_books(self):
-    	avi = Book.objects.filter(copies_available__gt=0)
-    	return avi
+    	return Book.objects.filter(copies_available__gt=0)
+
+    @classmethod
+    def borrow(self, user):
+    	from django.db import transaction
+    	with transaction.atomic():
+    		print("self", self, "user", user, "self.copies_available", self.title)
+    
 # END
 
 
