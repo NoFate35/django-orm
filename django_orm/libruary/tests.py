@@ -4,29 +4,6 @@ import pytest
 
 from django_orm.libruary.models import Author, Book, Borrow, Genre, Review, User
 
-"""
-@pytest.fixture
-def author():
-    return Author.objects.create(name="Лев Толстой", country="Россия")
-
-
-@pytest.fixture
-def genre():
-    return Genre.objects.create(name="Роман")
-
-
-@pytest.fixture
-def user():
-    return User.objects.create(name="Иван Петров")
-
-
-@pytest.fixture
-def book(author, genre):
-    book = Book.objects.create(title="Война и мир", author=author, copies_available=2)
-    book.genres.add(genre)
-    return book
-"""
-
 
 class StudentsTest(TestCase):
 	
@@ -117,9 +94,7 @@ class StudentsTest(TestCase):
     def test_get_top_genres(self):
         # Создаем дополнительный жанр и книгу
         second_genre = Genre.objects.create(name="Поэзия")
-        second_book = Book.objects.create(
-            title="Стихотворения", author=self.book.author, copies_available=1
-        )
+        second_book = Book.objects.create(title="Стихотворения", author=self.book.author, copies_available=1)
         second_book.genres.add(second_genre)
 
         # Создаем заимствования

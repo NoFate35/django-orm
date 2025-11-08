@@ -15,8 +15,9 @@ class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True)
     # BEGIN (write your solution here)
     def get_top_genres():
-        genres = Genre.objects.prefetch_related('books').prefetch_related('borrows')
-        print('gggenres', genres)
+        genres = Book.objects.prefetch_related("genres", 'borrows').values("genres__name").annotate(borrow_count = Count('borrows')).order_by('-borrow_count')
+        print("gggenres", genres)
+        return genres
 # END
 
 
