@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_orm',
     'django_orm.libruary',
     'django_orm.quote',
+    'django_orm.shop',
     'django_extensions',
 ]
 
