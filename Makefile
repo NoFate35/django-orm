@@ -1,7 +1,7 @@
 MANAGE := poetry run python manage.py
 
 test:
-	poetry run python3 manage.py test
+	poetry run python3 manage.py test django_orm.quote
 
 server:
 	poetry run manage.py runserver
