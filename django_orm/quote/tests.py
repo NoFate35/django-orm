@@ -17,6 +17,7 @@ QUOTES = (
     ),
 )
 class TestQuote(TestCase):
+    
     def setUp(self):
         self.quotes = [models.Quote.objects.create(text=text, 
                 source=source).id for text, source in QUOTES ]
@@ -34,6 +35,7 @@ class TestQuote(TestCase):
     
     @pytest.mark.django_db
     def test_quote_of_the_day_single(self):
+        models.Quote.objects.all().delete()
         # цитата всего одна
         quote = models.Quote.objects.create(text="?", source="?").id
 
