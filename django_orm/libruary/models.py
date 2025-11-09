@@ -63,6 +63,7 @@ class Borrow(models.Model):
     return_date = models.DateField(null=True, blank=True)
 
 
+
 class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="reviews")
     rating = models.PositiveSmallIntegerField(choices=[(i, i) for i in range(1, 6)])
