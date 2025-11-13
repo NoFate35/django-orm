@@ -7,7 +7,7 @@ server:
 	poetry run manage.py runserver
 
 makemigrations:
-	@$(MANAGE) makemigrations 
+	@$(MANAGE) makemigrations shop
 
 .PHONY: migrate
 migrate:

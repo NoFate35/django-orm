@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django_orm.shop import models
+import django.db
 
 import pytest
 
