@@ -5,7 +5,7 @@ from django.db.models import F, Sum
 class ShoppingCart(models.Model):
     def preview(self):
         # BEGIN (write your solution here)
-        positions = total_price = self.positions.annotate(positional_price=F('item__price') * F('quantity')).order_by('-positional_price').values_list('item__name', 'quantity')
+        positions = self.positions.annotate(positional_price=F('item__price') * F('quantity')).order_by('-positional_price').values_list('item__name', 'quantity')
         return positions
 
     def add(self, item, quantity=1):
@@ -34,7 +34,4 @@ class ShoppingCartPosition(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["cart", "item"], name="unique_item")]
-    
-    PRICE = F("positions__price") * F("quantity")
     # END
-
