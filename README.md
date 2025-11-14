@@ -16,6 +16,9 @@ The __poetry__ project manager must be installed to work with the project
 git clone https://github.com/NoFate35/django-orm.git
 cd django-orm
 poetry install
+make makemigrations
+make migrate
+make test
 ```
 ### Description
 The project is managed by the poetry project manager and consists of several applications: 

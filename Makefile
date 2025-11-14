@@ -1,13 +1,13 @@
 MANAGE := poetry run python manage.py
 
 test:
-	poetry run python3 manage.py test django_orm.shop
+	poetry run python3 manage.py test 
 
 server:
 	poetry run manage.py runserver
 
 makemigrations:
-	@$(MANAGE) makemigrations shop
+	@$(MANAGE) makemigrations
 
 .PHONY: migrate
 migrate:
