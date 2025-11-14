@@ -1,31 +1,27 @@
-django_project/app/models.py
-Вам даны модели корзины для покупок ShoppingCart и товара ShopItem. Наличие товаров в корзине будет описывать модель ShoppingCartPosition. Кроме связи корзины и товара нужно знать количество товаров в корзине, эта информация тоже должна храниться в ShoppingCartPosition. Должно быть невозможно добавить один и тот же товар в корзину дважды — это должно быть ограничение (constraint) на уровне БД.
+## Skill badges
+![Poetry](https://img.shields.io/badge/Poetry-%233B82F6.svg?style=for-the-badge&logo=poetry&logoColor=0B3D8D)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+# About project
+In this course, I learned Django ORM, the main way to work with data in Django. I learned more about models and their mapping to the database, migrations, and query construction. I figured out how to describe the relationships between models and perform reversible operations in transaction mode.
+### Topics to be considered:
+* Working with a modern ORM;
+* Build complex queries with aggregation and annotation functions;
+* Analyze the effectiveness of using ORM
+### Installation
+The __poetry__ project manager must be installed to work with the project
+```
+git clone https://github.com/NoFate35/django-orm.git
+cd django-orm
+poetry install
+```
+### Description
+The project is managed by the poetry project manager and consists of several applications: 
+* libruary - In this test, a library system with the functions of issuing books and calculating statistics is implemented;
+* quote - The Quote model describes a collection of quotations from works of popular culture.  The "Quote of the day" is selected using the class method;
+* shop - This task implements a system for counting items in the shopping cart, sorting, and using F() -expressions.
 
-Задачи:
+__Testing has been conducted__
 
-Описать необходимые поля модели ShoppingCartPosition.
-
-Сгенерировать миграции.
-
-Реализовать метод ShoppingCart.add(), который должен добавлять товар в корзину в указанном количестве:
-
-cart = models.ShoppingCart.objects.create()
-apple = models.ShopItem.objects.create(name='apple', price=2.0)
-pear = models.ShopItem.objects.create(name='pear', price=3.0)
-cart.add(apple, 2)
-cart.add(pear)  # по умолчанию добавляется одна штука
-Реализовать свойство ShoppingCart.total_price, которое должно возвращать суммарную стоимость товаров в корзине с учётом их количества:
-
-cart.total_price == 2 * 2.0 + 1 * 3.0 # True
-Реализовать метод ShoppingCart.preview(), который должен возвращать итератор пар, каждая из которых состоит из наименования товара (строка) и количества товаров этого вида в корзине. Элементы итератора должны быть отсортированы по порядку убывания итоговой цены позиции в корзине: сотня салфеток ценой в 10коп каждая — 10руб в сумме — должна идти раньше пары яблок по 2руб за каждое или 4руб в сумме.
-
-for name, quantity in cart.preview():
-    print(quantity, '×', name)
-
-# => 2 × apple
-# => 1 × pear
-# пара яблок дороже одной груши!
-Подсказка
-Для ShoppingCart.preview() вам пригодятся аннотирование и F-выражения.
-Для ShoppingCart.total_price вам пригодятся те же F-выражения и агрегация.
-Чтобы обеспечить уникальность товаров в корзине, укажите для ShoppingCartPosition ограничение unique_together.
